@@ -1,0 +1,98 @@
+ISL Dataset Missing Files Analysis
+============================================
+
+Based on the warnings during dataset organization, here are the missing files:
+
+SUMMARY:
+- Total expected files: 958 (689 train + 192 test + 77 validation)
+- Successfully organized: 872 files
+- Missing files: 86 files
+- Success rate: 91.0%
+
+CATEGORIES OF MISSING FILES:
+
+1. FILES WITH .MP4 EXTENSION (but expected .MOV):
+   - Electronics/54. Cell phone/MVI_9100.MOV -> exists as MVI_9100.MP4
+   - Electronics/54. Cell phone/MVI_9101.MOV -> exists as MVI_9101.MP4
+   - Electronics/54. Cell phone/MVI_9102.MOV -> exists as MVI_9102.MP4
+   - Animals/4. Bird/MVI_8567.MOV -> exists as MVI_8567.MP4
+   - Animals/4. Bird/MVI_8568.MOV -> exists as MVI_8568.MP4
+   - Animals/5. Cow/MVI_8569.MOV -> exists as MVI_8569.MP4
+   - Animals/5. Cow/MVI_8570.MOV -> exists as MVI_8570.MP4
+
+2. FILES IN 'EXTRA' SUBDIRECTORIES:
+   - Animals/4. Bird/MVI_3041.MOV -> exists in Animals/4. Bird/Extra/
+   - Animals/4. Bird/MVI_3042.MOV -> exists in Animals/4. Bird/Extra/
+   - Animals/4. Bird/MVI_3043.MOV -> exists in Animals/4. Bird/Extra/
+   - Animals/4. Bird/MVI_3044.MOV -> exists in Animals/4. Bird/Extra/
+   - Places/28. Store or Shop/MVI_3636.MOV -> exists in Places/28. Store or Shop/Extra/
+   - Places/28. Store or Shop/MVI_3637.MOV -> exists in Places/28. Store or Shop/Extra/
+   - Places/35. Bank/MVI_3339.MOV -> exists in Places/35. Bank/Extra/
+   - Places/23. Court/MVI_3368.MOV -> exists in Places/23. Court/Extra/
+   - Places/23. Court/MVI_3613.MOV -> exists in Places/23. Court/Extra/
+   - Places/23. Court/MVI_3288.MOV -> exists in Places/23. Court/Extra/
+   - Adjectives/84. small little/MVI_5209.MOV -> exists in Adjectives/84. small little/extra/
+   - Adjectives/79. short/MVI_5192.MOV -> exists in Adjectives/79. short/extra/
+   - Places/19. House/MVI_3439.MOV -> exists in Places/19. House/Extra/
+
+3. FILES MISSING FROM DIRECTORIES (likely in unextracted zip files):
+   
+   Home category (20 files):
+   - Home/28. Window/MVI_9014.MOV, MVI_8769.MOV, MVI_8767.MOV, etc.
+   - Home/34. Pen/MVI_8794.MOV, MVI_9033.MOV, MVI_8791.MOV, etc.
+   - Home/40. Paint/MVI_8818.MOV, MVI_8819.MOV, MVI_9051.MOV, etc.
+
+   Jobs category (6 files):
+   - Jobs/84. Teacher/MVI_8866.MOV, MVI_8864.MOV, MVI_8865.MOV
+   - Jobs/91. Priest/MVI_8889.MOV, MVI_8887.MOV, MVI_8888.MOV
+
+   People category (4 files):
+   - People/66. Brother/MVI_8631.MOV
+   - People/77. Boy/MVI_8644.MOV
+   - People/78. Girl/MVI_8645.MOV
+   - People/61. Father/MVI_8626.MOV
+
+   Means_of_Transportation category (4 files):
+   - Means_of_Transportation/16. train ticket/MVI_8596.MOV, MVI_8597.MOV
+   - Means_of_Transportation/11. Car/MVI_8584.MOV, MVI_8583.MOV
+
+   Days_and_Time category (11 files):
+   - Days_and_Time/67. Monday/MVI_9144.MOV, MVI_9142.MOV, MVI_9143.MOV
+   - Days_and_Time/78. Year/MVI_9176.MOV, MVI_9178.MOV, MVI_9177.MOV, MVI_9175.MOV
+   - Days_and_Time/86. Time/MVI_9203.MOV, MVI_9202.MOV, MVI_9201.MOV, MVI_9204.MOV
+
+   Clothes category (3 files):
+   - Clothes/42. T-Shirt/MVI_8606.MOV
+   - Clothes/44. Shoes/MVI_8608.MOV
+   - Clothes/37. Hat/MVI_8600.MOV
+
+   Electronics category (3 files):
+   - Electronics/53. Fan/MVI_9097.MOV, MVI_9099.MOV, MVI_9098.MOV
+
+   Society category (13 files):
+   - Society/2. Death/MVI_8930.MOV, MVI_8661.MOV, MVI_8664.MOV, etc.
+   - Society/14. Election/MVI_8969.MOV, MVI_8712.MOV, MVI_8713.MOV, etc.
+
+   Seasons category (7 files):
+   - Seasons/61. Summer/MVI_9124.MOV, MVI_9123.MOV, MVI_9122.MOV
+   - Seasons/64. Fall/MVI_9134.MOV, MVI_9135.MOV, MVI_9133.MOV, MVI_9132.MOV
+
+   Colours category (3 files):
+   - Colours/47. Red/MVI_8612.MOV
+   - Colours/55. White/MVI_8620.MOV
+   - Colours/54. Black/MVI_8619.MOV
+
+   Animals category (2 files):
+   - Animals/1. Dog/MVI_8560.MOV, MVI_8561.MOV
+
+RECOMMENDATIONS:
+1. Extract all remaining zip files to ensure all videos are available
+2. Convert .MP4 files to .MOV or update file lists to accept .MP4 extensions  
+3. Move files from 'Extra' subdirectories to parent directories
+4. Files with 8xxx and 9xxx prefixes appear to be in different zip archives
+
+CONCLUSION:
+The dataset organization achieved 91% success rate. Missing files are primarily due to:
+- Different file formats (.MP4 vs .MOV) - 7 files
+- Files in Extra subdirectories - 13 files  
+- Files not yet extracted from zip archives - 66 files

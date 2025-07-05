@@ -1,0 +1,189 @@
+=== ISL DATASET MISSING FILES REPORT ===
+
+Total missing files: 86
+
+=== TRAIN SPLIT ===
+Missing files: 63
+
+Animals/4. Bird/MVI_8567.MOV
+Animals/4. Bird/MVI_8568.MOV
+Animals/5. Cow/MVI_8569.MOV
+Animals/5. Cow/MVI_8570.MOV
+Clothes/42. T-Shirt/MVI_8606.MOV
+Clothes/44. Shoes/MVI_8608.MOV
+Colours/47. Red/MVI_8612.MOV
+Colours/54. Black/MVI_8619.MOV
+Colours/55. White/MVI_8620.MOV
+Days_and_Time/67. Monday/MVI_9142.MOV
+Days_and_Time/67. Monday/MVI_9143.MOV
+Days_and_Time/67. Monday/MVI_9144.MOV
+Days_and_Time/78. Year/MVI_9176.MOV
+Days_and_Time/78. Year/MVI_9178.MOV
+Days_and_Time/86. Time/MVI_9201.MOV
+Days_and_Time/86. Time/MVI_9202.MOV
+Days_and_Time/86. Time/MVI_9203.MOV
+Electronics/53. Fan/MVI_9097.MOV
+Electronics/53. Fan/MVI_9098.MOV
+Electronics/53. Fan/MVI_9099.MOV
+Electronics/54. Cell phone/MVI_9100.MOV
+Electronics/54. Cell phone/MVI_9101.MOV
+Electronics/54. Cell phone/MVI_9102.MOV
+Home/28. Window/MVI_8766.MOV
+Home/28. Window/MVI_8767.MOV
+Home/28. Window/MVI_8769.MOV
+Home/28. Window/MVI_9014.MOV
+Home/34. Pen/MVI_8791.MOV
+Home/34. Pen/MVI_8794.MOV
+Home/34. Pen/MVI_9032.MOV
+Home/34. Pen/MVI_9033.MOV
+Home/34. Pen/MVI_9034.MOV
+Home/40. Paint/MVI_8818.MOV
+Home/40. Paint/MVI_8819.MOV
+Home/40. Paint/MVI_9051.MOV
+Home/40. Paint/MVI_9052.MOV
+Home/40. Paint/MVI_9053.MOV
+Jobs/84. Teacher/MVI_8864.MOV
+Jobs/84. Teacher/MVI_8865.MOV
+Jobs/84. Teacher/MVI_8866.MOV
+Jobs/91. Priest/MVI_8887.MOV
+Jobs/91. Priest/MVI_8889.MOV
+Means_of_Transportation/11. Car/MVI_8583.MOV
+Means_of_Transportation/11. Car/MVI_8584.MOV
+Means_of_Transportation/16. train ticket/MVI_8596.MOV
+People/66. Brother/MVI_8631.MOV
+People/78. Girl/MVI_8645.MOV
+Seasons/61. Summer/MVI_9123.MOV
+Seasons/61. Summer/MVI_9124.MOV
+Seasons/64. Fall/MVI_9133.MOV
+Seasons/64. Fall/MVI_9134.MOV
+Seasons/64. Fall/MVI_9135.MOV
+Society/14. Election/MVI_8710.MOV
+Society/14. Election/MVI_8711.MOV
+Society/14. Election/MVI_8712.MOV
+Society/14. Election/MVI_8713.MOV
+Society/14. Election/MVI_8968.MOV
+Society/14. Election/MVI_8969.MOV
+Society/2. Death/MVI_8661.MOV
+Society/2. Death/MVI_8662.MOV
+Society/2. Death/MVI_8664.MOV
+Society/2. Death/MVI_8930.MOV
+Society/2. Death/MVI_8932.MOV
+
+=== TEST SPLIT ===
+Missing files: 14
+
+Animals/1. Dog/MVI_8560.MOV
+Clothes/37. Hat/MVI_8600.MOV
+Days_and_Time/78. Year/MVI_9177.MOV
+Home/28. Window/MVI_8768.MOV
+Home/28. Window/MVI_9015.MOV
+Home/34. Pen/MVI_8793.MOV
+Home/40. Paint/MVI_8817.MOV
+Home/40. Paint/MVI_8821.MOV
+Means_of_Transportation/16. train ticket/MVI_8597.MOV
+People/77. Boy/MVI_8644.MOV
+Seasons/61. Summer/MVI_9122.MOV
+Seasons/64. Fall/MVI_9132.MOV
+Society/14. Election/MVI_8967.MOV
+Society/2. Death/MVI_8931.MOV
+
+=== VALIDATION SPLIT ===
+Missing files: 9
+
+Animals/1. Dog/MVI_8561.MOV
+Days_and_Time/78. Year/MVI_9175.MOV
+Days_and_Time/86. Time/MVI_9204.MOV
+Home/28. Window/MVI_9013.MOV
+Home/34. Pen/MVI_8795.MOV
+Home/40. Paint/MVI_8820.MOV
+Jobs/91. Priest/MVI_8888.MOV
+People/61. Father/MVI_8626.MOV
+Society/2. Death/MVI_8663.MOV
+
+=== ALL MISSING FILES (sorted) ===
+[test] Animals/1. Dog/MVI_8560.MOV
+[validation] Animals/1. Dog/MVI_8561.MOV
+[train] Animals/4. Bird/MVI_8567.MOV
+[train] Animals/4. Bird/MVI_8568.MOV
+[train] Animals/5. Cow/MVI_8569.MOV
+[train] Animals/5. Cow/MVI_8570.MOV
+[test] Clothes/37. Hat/MVI_8600.MOV
+[train] Clothes/42. T-Shirt/MVI_8606.MOV
+[train] Clothes/44. Shoes/MVI_8608.MOV
+[train] Colours/47. Red/MVI_8612.MOV
+[train] Colours/54. Black/MVI_8619.MOV
+[train] Colours/55. White/MVI_8620.MOV
+[train] Days_and_Time/67. Monday/MVI_9142.MOV
+[train] Days_and_Time/67. Monday/MVI_9143.MOV
+[train] Days_and_Time/67. Monday/MVI_9144.MOV
+[validation] Days_and_Time/78. Year/MVI_9175.MOV
+[train] Days_and_Time/78. Year/MVI_9176.MOV
+[test] Days_and_Time/78. Year/MVI_9177.MOV
+[train] Days_and_Time/78. Year/MVI_9178.MOV
+[train] Days_and_Time/86. Time/MVI_9201.MOV
+[train] Days_and_Time/86. Time/MVI_9202.MOV
+[train] Days_and_Time/86. Time/MVI_9203.MOV
+[validation] Days_and_Time/86. Time/MVI_9204.MOV
+[train] Electronics/53. Fan/MVI_9097.MOV
+[train] Electronics/53. Fan/MVI_9098.MOV
+[train] Electronics/53. Fan/MVI_9099.MOV
+[train] Electronics/54. Cell phone/MVI_9100.MOV
+[train] Electronics/54. Cell phone/MVI_9101.MOV
+[train] Electronics/54. Cell phone/MVI_9102.MOV
+[train] Home/28. Window/MVI_8766.MOV
+[train] Home/28. Window/MVI_8767.MOV
+[test] Home/28. Window/MVI_8768.MOV
+[train] Home/28. Window/MVI_8769.MOV
+[validation] Home/28. Window/MVI_9013.MOV
+[train] Home/28. Window/MVI_9014.MOV
+[test] Home/28. Window/MVI_9015.MOV
+[train] Home/34. Pen/MVI_8791.MOV
+[test] Home/34. Pen/MVI_8793.MOV
+[train] Home/34. Pen/MVI_8794.MOV
+[validation] Home/34. Pen/MVI_8795.MOV
+[train] Home/34. Pen/MVI_9032.MOV
+[train] Home/34. Pen/MVI_9033.MOV
+[train] Home/34. Pen/MVI_9034.MOV
+[test] Home/40. Paint/MVI_8817.MOV
+[train] Home/40. Paint/MVI_8818.MOV
+[train] Home/40. Paint/MVI_8819.MOV
+[validation] Home/40. Paint/MVI_8820.MOV
+[test] Home/40. Paint/MVI_8821.MOV
+[train] Home/40. Paint/MVI_9051.MOV
+[train] Home/40. Paint/MVI_9052.MOV
+[train] Home/40. Paint/MVI_9053.MOV
+[train] Jobs/84. Teacher/MVI_8864.MOV
+[train] Jobs/84. Teacher/MVI_8865.MOV
+[train] Jobs/84. Teacher/MVI_8866.MOV
+[train] Jobs/91. Priest/MVI_8887.MOV
+[validation] Jobs/91. Priest/MVI_8888.MOV
+[train] Jobs/91. Priest/MVI_8889.MOV
+[train] Means_of_Transportation/11. Car/MVI_8583.MOV
+[train] Means_of_Transportation/11. Car/MVI_8584.MOV
+[train] Means_of_Transportation/16. train ticket/MVI_8596.MOV
+[test] Means_of_Transportation/16. train ticket/MVI_8597.MOV
+[validation] People/61. Father/MVI_8626.MOV
+[train] People/66. Brother/MVI_8631.MOV
+[test] People/77. Boy/MVI_8644.MOV
+[train] People/78. Girl/MVI_8645.MOV
+[test] Seasons/61. Summer/MVI_9122.MOV
+[train] Seasons/61. Summer/MVI_9123.MOV
+[train] Seasons/61. Summer/MVI_9124.MOV
+[test] Seasons/64. Fall/MVI_9132.MOV
+[train] Seasons/64. Fall/MVI_9133.MOV
+[train] Seasons/64. Fall/MVI_9134.MOV
+[train] Seasons/64. Fall/MVI_9135.MOV
+[train] Society/14. Election/MVI_8710.MOV
+[train] Society/14. Election/MVI_8711.MOV
+[train] Society/14. Election/MVI_8712.MOV
+[train] Society/14. Election/MVI_8713.MOV
+[test] Society/14. Election/MVI_8967.MOV
+[train] Society/14. Election/MVI_8968.MOV
+[train] Society/14. Election/MVI_8969.MOV
+[train] Society/2. Death/MVI_8661.MOV
+[train] Society/2. Death/MVI_8662.MOV
+[validation] Society/2. Death/MVI_8663.MOV
+[train] Society/2. Death/MVI_8664.MOV
+[train] Society/2. Death/MVI_8930.MOV
+[test] Society/2. Death/MVI_8931.MOV
+[train] Society/2. Death/MVI_8932.MOV

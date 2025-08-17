@@ -1,0 +1,13 @@
+Train
+Days_and_Time/Second (Number)/MVI_5506.MOV
+Days_and_Time/Second (Number)/MVI_5505.MOV
+Days_and_Time/Second (Number)/MVI_5503.MOV
+Days_and_Time/Second (Number)/MVI_4647.MOV
+Days_and_Time/Second (Number)/MVI_5504.MOV
+Days_and_Time/Second (Number)/MVI_4649.MOV
+
+Validation
+Days_and_Time/Second (Number)/MVI_4648.MOV
+
+Test
+Days_and_Time/Second (Number)/MVI_4650.MOV

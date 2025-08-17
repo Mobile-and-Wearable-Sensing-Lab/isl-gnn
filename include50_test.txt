@@ -9,14 +9,14 @@ Means_of_Transportation/11. Car/MVI_3174.MOV
 Means_of_Transportation/11. Car/MVI_3176.MOV
 Means_of_Transportation/11. Car/MVI_3116.MOV
 Animals/1. Dog/MVI_3086.MOV
-Animals/1. Dog/MVI_8560.MOV
+Animals/1. Dog/MVI_8560.MP4
 Animals/1. Dog/MVI_2978.MOV
 Animals/1. Dog/MVI_3087.MOV
 Animals/1. Dog/MVI_2980.MOV
 Animals/1. Dog/MVI_4147.MOV
 Animals/1. Dog/MVI_3029.MOV
 Seasons/64. Fall/MVI_5435.MOV
-Seasons/64. Fall/MVI_9132.MOV
+Seasons/64. Fall/MVI_9132.MP4
 Seasons/64. Fall/MVI_4578.MOV
 People/61. Father/MVI_5082.MOV
 People/61. Father/MVI_5080.MOV
@@ -26,7 +26,7 @@ Greetings/51. Good Morning/MVI_9992.MOV
 Greetings/51. Good Morning/MVI_9969.MOV
 Colours/47. Red/MVI_5186.MOV
 Colours/47. Red/MVI_4898.MOV
-Seasons/61. Summer/MVI_9122.MOV
+Seasons/61. Summer/MVI_9122.MP4
 Seasons/61. Summer/MVI_4991.MOV
 Seasons/61. Summer/MVI_4568.MOV
 Colours/55. White/MVI_5211.MOV
@@ -77,7 +77,7 @@ Adjectives/94. good/MVI_5239.MOV
 Animals/5. Cow/MVI_3016.MOV
 Animals/5. Cow/MVI_3073.MOV
 Animals/5. Cow/MVI_3048.MOV
-Clothes/37. Hat/MVI_8600.MOV
+Clothes/37. Hat/MVI_8600.MP4
 Clothes/37. Hat/MVI_5156.MOV
 Clothes/37. Hat/MVI_5155.MOV
 Clothes/37. Hat/MVI_3984.MOV
@@ -98,7 +98,7 @@ Days_and_Time/78. Year/MVI_4635.MOV
 Days_and_Time/78. Year/MVI_4637.MOV
 Days_and_Time/78. Year/MVI_4636.MOV
 Days_and_Time/78. Year/MVI_5049.MOV
-Days_and_Time/78. Year/MVI_9177.MOV
+Days_and_Time/78. Year/MVI_9177.MP4
 Days_and_Time/86. Time/MVI_5525.MOV
 Days_and_Time/86. Time/MVI_5527.MOV
 Days_and_Time/86. Time/MVI_5077.MOV
@@ -124,13 +124,13 @@ Greetings/55. Thank you/MVI_9951.MOV
 Greetings/55. Thank you/MVI_9984.MOV
 Greetings/55. Thank you/MVI_0060_.MOV
 Home/28. Window/MVI_4363.MOV
-Home/28. Window/MVI_9015.MOV
-Home/28. Window/MVI_8768.MOV
+Home/28. Window/MVI_9015.MP4
+Home/28. Window/MVI_8768.MP4
 Home/34. Pen/MVI_4906.MOV
-Home/34. Pen/MVI_8793.MOV
-Home/40. Paint/MVI_8821.MOV
+Home/34. Pen/MVI_8793.MP4
+Home/40. Paint/MVI_8821.MP4
 Home/40. Paint/MVI_4415.MOV
-Home/40. Paint/MVI_8817.MOV
+Home/40. Paint/MVI_8817.MP4
 Jobs/84. Teacher/MVI_4460.MOV
 Jobs/84. Teacher/MVI_5313.MOV
 Jobs/84. Teacher/MVI_4457.MOV
@@ -142,7 +142,7 @@ Means_of_Transportation/16. train ticket/MVI_3197.MOV
 Means_of_Transportation/16. train ticket/MVI_3195.MOV
 Means_of_Transportation/16. train ticket/MVI_4193.MOV
 Means_of_Transportation/16. train ticket/MVI_3163.MOV
-Means_of_Transportation/16. train ticket/MVI_8597.MOV
+Means_of_Transportation/16. train ticket/MVI_8597.MP4
 People/66. Brother/MVI_4077.MOV
 People/66. Brother/MVI_3929.MOV
 People/66. Brother/MVI_5097.MOV
@@ -151,7 +151,7 @@ People/66. Brother/MVI_3927.MOV
 People/77. Boy/MVI_4111.MOV
 People/77. Boy/MVI_5287.MOV
 People/77. Boy/MVI_5134.MOV
-People/77. Boy/MVI_8644.MOV
+People/77. Boy/MVI_8644.MP4
 People/78. Girl/MVI_4985.MOV
 People/78. Girl/MVI_5136.MOV
 Places/23. Court/MVI_3286.MOV
@@ -184,8 +184,8 @@ Pronouns/46. you (plural)/MVI_9948.MOV
 Pronouns/46. you (plural)/MVI_9907.MOV
 Pronouns/46. you (plural)/MVI_9905.MOV
 Society/14. Election/MVI_4841.MOV
-Society/14. Election/MVI_8967.MOV
-Society/2. Death/MVI_8931.MOV
+Society/14. Election/MVI_8967.MP4
+Society/2. Death/MVI_8931.MP4
 Society/2. Death/MVI_4801.MOV
 Society/2. Death/MVI_4800.MOV
 Society/2. Death/MVI_4255.MOV

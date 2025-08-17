@@ -1,3 +1,8 @@
+landmarks/
+data_splits/
+test/
+val/
+train/
 new_dataset/
 .idea/
 h5_output/

@@ -351,7 +351,7 @@ if __name__ == "__main__":
     dataloaders = create_data_loaders(
         root_dir=root_dir,
         batch_size=8,
-        num_workers=8,
+        num_workers=0,
         use_world_landmarks=False,
         use_hand_landmarks=True,
         normalize=True,

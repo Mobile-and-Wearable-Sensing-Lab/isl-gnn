@@ -1,0 +1,32 @@
+# Data Configuration
+data_root: "/Users/yashrb/Projects/isl_videos/landmarks"  # Update this path
+batch_size: 32
+num_workers: 0
+max_frames: 100  # Set to None to use all frames
+normalize: true
+use_world_landmarks: false
+use_hand_landmarks: true
+
+# Model Configuration
+dropout: 0.2
+edge_importance_weighting: true
+
+# Training Configuration
+epochs: 100
+learning_rate: 0.001
+weight_decay: 0.0001
+cosine_t_max: 100  # For cosine annealing
+cosine_eta_min: 0.00001
+
+# Logging Configuration
+log_interval: 10  # Log every N batches
+val_interval: 1  # Validate every N epochs
+
+# WandB Configuration
+wandb_project: "isl-stgcn"
+wandb_run_name: "baseline"
+wandb_entity: "yashrb" # Set to your WandB username/team if needed
+
+# Paths
+checkpoint_dir: "./checkpoints"
+save_model: false

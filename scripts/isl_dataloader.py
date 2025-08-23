@@ -1,10 +1,10 @@
 import os
+from typing import Dict, Optional
+
 import h5py
+import numpy as np
 import torch
 from torch.utils.data import Dataset, DataLoader
-from torch.nn.utils.rnn import pad_sequence
-import numpy as np
-from typing import Dict, Optional
 
 
 class ISLVideoDataset(Dataset):
@@ -59,40 +59,40 @@ class ISLVideoDataset(Dataset):
         """Build list of all H5 files and create label mappings with parent category hierarchy."""
         # Get parent categories (top-level directories in split)
         parent_categories = sorted([d for d in os.listdir(self.split_dir)
-                                   if os.path.isdir(os.path.join(self.split_dir, d))])
-        
+                                    if os.path.isdir(os.path.join(self.split_dir, d))])
+
         all_classes = []
-        
+
         # Iterate through parent categories
         for parent_category in parent_categories:
             parent_dir = os.path.join(self.split_dir, parent_category)
-            
+
             # Get class names within this parent category
             class_names = sorted([d for d in os.listdir(parent_dir)
-                                 if os.path.isdir(os.path.join(parent_dir, d))])
-            
+                                  if os.path.isdir(os.path.join(parent_dir, d))])
+
             # Store parent-class relationship
             self.parent_to_classes[parent_category] = class_names
-            
+
             # Map each class to its parent
             for class_name in class_names:
                 self.class_to_parent[class_name] = parent_category
                 all_classes.append(class_name)
-        
+
         # Create class to index mapping (across all parent categories)
         for idx, class_name in enumerate(sorted(all_classes)):
             self.class_to_idx[class_name] = idx
             self.idx_to_class[idx] = class_name
-        
+
         # Build file list with parent category hierarchy
         for parent_category in parent_categories:
             parent_dir = os.path.join(self.split_dir, parent_category)
-            class_names = self.parent_to_classes[parent_category] 
-            
+            class_names = self.parent_to_classes[parent_category]
+
             for class_name in class_names:
                 class_dir = os.path.join(parent_dir, class_name)
                 h5_files = [f for f in os.listdir(class_dir) if f.endswith('.h5')]
- 
+
                 for h5_file in h5_files:
                     file_path = os.path.join(class_dir, h5_file)
                     self.file_list.append(file_path)
@@ -105,7 +105,11 @@ class ISLVideoDataset(Dataset):
     def __getitem__(self, idx):
         """
         Returns:
-            data: torch.Tensor of shape (num_frames, num_features)
+            data: torch.Tensor of shape (C, T, V, M) where:
+                C = number of channels (3 for x,y,z coordinates)
+                T = number of frames
+                V = number of vertices/landmarks (21)
+                M = number of hands (2)
             label: int, class index
             metadata: dict with additional information
         """
@@ -115,24 +119,12 @@ class ISLVideoDataset(Dataset):
 
         # Load H5 file
         with h5py.File(file_path, 'r') as f:
-            # Load landmark data
-            features = []
-
+            # Load landmark data - prioritize hand_landmarks for now
             if self.use_hand_landmarks:
-                hand_landmarks = f['hand_landmarks'][:]  # (num_frames, 2, 21, 3)
-                # Flatten to (num_frames, 2*21*3)
-                hand_features = hand_landmarks.reshape(hand_landmarks.shape[0], -1)
-                features.append(hand_features)
-
-            if self.use_world_landmarks:
-                world_landmarks = f['world_landmarks'][:]  # (num_frames, 2, 21, 3)
-                # Flatten to (num_frames, 2*21*3)
-                world_features = world_landmarks.reshape(world_landmarks.shape[0], -1)
-                features.append(world_features)
-
-            # Concatenate features
-            if features:
-                data = np.concatenate(features, axis=1)  # (num_frames, total_features)
+                data = f['hand_landmarks'][:]  # (T, M, V, C) = (num_frames, 2, 21, 3)
+            elif self.use_world_landmarks:
+                # data = f['world_landmarks'][:]  # (T, M, V, C) = (num_frames, 2, 21, 3)
+                raise ValueError("World landmarks not supported yet.")
             else:
                 raise ValueError("No features selected. Enable hand_landmarks or world_landmarks.")
 
@@ -148,33 +140,32 @@ class ISLVideoDataset(Dataset):
         if self.normalize:
             data = self._normalize_landmarks(data)
 
-        # Convert to torch tensor
+        # Convert to torch tensor and reshape to (C, T, V, M)
+        # From (T, M, V, C) to (C, T, V, M)
         data_tensor = torch.from_numpy(data).float()
+        data_tensor = data_tensor.permute(3, 0, 2, 1)  # (C, T, V, M)
 
         # Apply max_frames limit with center cropping/padding
         data_tensor, frame_metadata = self._apply_frame_limit(data_tensor, frame_metadata)
-
-        # Use data_tensor instead of data from this point forward
-        data = data_tensor
 
         # Create metadata dict
         metadata = {
             'file_path': file_path,
             'class_name': self.idx_to_class[label],
             'parent_category': parent_category,
-            'num_frames': data.shape[0],
+            'num_frames': data_tensor.shape[0],
             'frame_metadata': frame_metadata,
             'file_metadata': file_metadata
         }
 
-        return data, label, metadata
+        return data_tensor, label, metadata
 
     def _apply_frame_limit(self, data_tensor, frame_metadata):
         """
         Apply max_frames limit with center cropping/padding.
         
         Args:
-            data_tensor: torch.Tensor of shape (num_frames, num_features)
+            data_tensor: torch.Tensor of shape (C, T, V, M)
             frame_metadata: numpy array of frame metadata
             
         Returns:
@@ -183,32 +174,33 @@ class ISLVideoDataset(Dataset):
         if not self.max_frames:
             return data_tensor, frame_metadata
 
-        if data_tensor.shape[0] > self.max_frames:
-            # Center crop
-            total = data_tensor.shape[0]
-            start = (total - self.max_frames) // 2
-            data_tensor = data_tensor[start: start + self.max_frames]
+        C, T, V, M = data_tensor.shape
+
+        if T > self.max_frames:
+            # Center crop along time dimension
+            start = (T - self.max_frames) // 2
+            data_tensor = data_tensor[:, start: start + self.max_frames, :, :]
             frame_metadata = frame_metadata[start: start + self.max_frames]
 
-        elif data_tensor.shape[0] < self.max_frames:
-            # Center padding
-            pad_num = self.max_frames - data_tensor.shape[0]
+        elif T < self.max_frames:
+            # Center padding along time dimension
+            pad_num = self.max_frames - T
             left_pad = pad_num // 2
             right_pad = pad_num - left_pad
-            shape_suffix = list(data_tensor.shape[1:])
 
+            # Create padding tensors
             left = torch.zeros(
-                (left_pad, *shape_suffix),
+                (C, left_pad, V, M),
                 device=data_tensor.device,
                 dtype=data_tensor.dtype,
             )
             right = torch.zeros(
-                (right_pad, *shape_suffix),
+                (C, right_pad, V, M),
                 device=data_tensor.device,
                 dtype=data_tensor.dtype,
             )
 
-            data_tensor = torch.cat([left, data_tensor, right], dim=0)
+            data_tensor = torch.cat([left, data_tensor, right], dim=1)
 
             # Pad frame_metadata with zeros or appropriate values
             left_metadata = np.zeros((left_pad,) + frame_metadata.shape[1:], dtype=frame_metadata.dtype)
@@ -220,17 +212,24 @@ class ISLVideoDataset(Dataset):
     def _normalize_landmarks(self, landmarks):
         """
         Normalize landmark coordinates.
-        This is a basic normalization - you might want to implement more sophisticated
-        normalization based on your specific needs.
+        
+        Args:
+            landmarks: numpy array of shape (T, M, V, C)
+        
+        Returns:
+            Normalized landmarks with same shape
         """
-        # Simple min-max normalization per sequence
+        # Simple min-max normalization per coordinate channel
         landmarks_norm = landmarks.copy()
+        T, M, V, C = landmarks.shape
 
-        # Normalize each feature dimension independently
-        for i in range(landmarks.shape[1]):
-            feature_data = landmarks[:, i]
-            if feature_data.max() != feature_data.min():
-                landmarks_norm[:, i] = (feature_data - feature_data.min()) / (feature_data.max() - feature_data.min())
+        # Normalize each coordinate channel independently
+        for c in range(C):
+            channel_data = landmarks[:, :, :, c]
+            c_min = channel_data.min()
+            c_max = channel_data.max()
+            if c_max != c_min:
+                landmarks_norm[:, :, :, c] = (channel_data - c_min) / (c_max - c_min)
 
         return landmarks_norm
 
@@ -241,11 +240,11 @@ class ISLVideoDataset(Dataset):
     def get_num_classes(self):
         """Return number of classes."""
         return len(self.class_to_idx)
-    
+
     def get_parent_categories(self):
         """Return list of parent categories."""
         return sorted(self.parent_to_classes.keys())
-    
+
     def get_classes_by_parent(self, parent_category):
         """Return list of classes for a given parent category."""
         return self.parent_to_classes.get(parent_category, [])
@@ -256,21 +255,33 @@ def collate_fn(batch):
     Custom collate function for batching sequences of different lengths.
     
     Args:
-        batch: List of (data, label, metadata) tuples
+        batch: List of (data, label, metadata) tuples where data has shape (C, T, V, M)
     
     Returns:
-        data: Padded tensor of shape (batch_size, max_seq_len, num_features)
+        data: Padded tensor of shape (batch_size, C, max_T, V, M)
         labels: Tensor of shape (batch_size,)
-        lengths: Tensor of actual sequence lengths
+        lengths: Tensor of actual sequence lengths (time dimension)
         metadata: List of metadata dicts
     """
     data_list, labels, metadata = zip(*batch)
 
-    # Get sequence lengths
-    lengths = torch.tensor([data.shape[0] for data in data_list])
+    # Get sequence lengths (time dimension)
+    lengths = torch.tensor([data.shape[1] for data in data_list])  # T is at index 1
 
-    # Pad sequences
-    padded_data = pad_sequence(data_list, batch_first=True, padding_value=0.0)
+    # Find max time length
+    max_time = max(data.shape[1] for data in data_list)
+
+    # Get other dimensions (should be same for all samples)
+    C, _, V, M = data_list[0].shape
+
+    # Create padded batch tensor
+    batch_size = len(data_list)
+    padded_data = torch.zeros(batch_size, C, max_time, V, M)
+
+    # Fill in the data
+    for i, data in enumerate(data_list):
+        T = data.shape[1]
+        padded_data[i, :, :T, :, :] = data
 
     # Convert labels to tensor
     labels = torch.tensor(labels, dtype=torch.long)
@@ -337,7 +348,8 @@ def create_data_loaders(root_dir: str,
 
         dataloaders[split] = dataloader
         num_parent_categories = len(dataset.get_parent_categories())
-        print(f"{split}: {len(dataset)} samples, {dataset.get_num_classes()} classes, {num_parent_categories} parent categories")
+        print(
+            f"{split}: {len(dataset)} samples, {dataset.get_num_classes()} classes, {num_parent_categories} parent categories")
 
     return dataloaders
 
@@ -363,11 +375,12 @@ if __name__ == "__main__":
         print(f"\nTesting {split} dataloader:")
         for batch_idx, (data, labels, lengths, metadata) in enumerate(dataloader):
             print(f"  Batch {batch_idx}:")
-            print(f"    Data shape: {data.shape}")
+            print(f"    Data shape: {data.shape} (N, C, T, V, M)")
             print(f"    Labels shape: {labels.shape}")
             print(f"    Lengths: {lengths}")
             print(f"    Sample classes: {[metadata[i]['class_name'] for i in range(min(3, len(metadata)))]}")
-            print(f"    Sample parent categories: {[metadata[i]['parent_category'] for i in range(min(3, len(metadata)))]}")
+            print(
+                f"    Sample parent categories: {[metadata[i]['parent_category'] for i in range(min(3, len(metadata)))]}")
 
             if batch_idx >= 2:  # Test first 3 batches
                 break

@@ -32,7 +32,7 @@ pip install -r requirements.txt
 ### Basic Usage
 
 ```python
-from isl_dataloader import create_data_loaders
+from scripts.isl_dataloader import create_data_loaders
 
 # Create dataloaders for all splits
 dataloaders = create_data_loaders(
@@ -57,7 +57,7 @@ for data, labels, lengths, metadata in dataloaders['train']:
 ### Advanced Usage
 
 ```python
-from isl_dataloader import ISLVideoDataset
+from scripts.isl_dataloader import ISLVideoDataset
 
 # Create custom dataset
 dataset = ISLVideoDataset(

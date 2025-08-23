@@ -8,9 +8,7 @@ This script demonstrates how to use the ISL video dataloader for training a mode
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.data import DataLoader
-from isl_dataloader import create_data_loaders, ISLVideoDataset
-import numpy as np
+from scripts.isl_dataloader import create_data_loaders
 from tqdm import tqdm
 
 

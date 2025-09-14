@@ -21,6 +21,7 @@ cosine_eta_min: 0.00001
 # Logging Configuration
 log_interval: 10  # Log every N batches
 val_interval: 1  # Validate every N epochs
+enable_wandb: true  # Enable/disable WandB logging
 
 # WandB Configuration
 wandb_project: "isl-stgcn"

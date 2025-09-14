@@ -282,12 +282,13 @@ def main(config_path):
         )
 
         # Log to WandB
-        wandb_run.log({
-            'test/final_loss': test_metrics['loss'],
-            'test/final_acc1': test_metrics['acc1'],
-            'test/final_acc5': test_metrics['acc5'],
-            'test/confusion_matrix': wandb_run.Image(fig)
-        })
+        if wandb_run is not None:
+            wandb_run.log({
+                'test/final_loss': test_metrics['loss'],
+                'test/final_acc1': test_metrics['acc1'],
+                'test/final_acc5': test_metrics['acc5'],
+                'test/confusion_matrix': wandb_run.Image(fig)
+            })
 
         # Save confusion matrix
         os.makedirs('results', exist_ok=True)
@@ -303,7 +304,8 @@ def main(config_path):
         )
 
     print("\nTraining completed!")
-    wandb_run.finish()
+    if wandb_run is not None:
+        wandb_run.finish()
 
 
 if __name__ == "__main__":

@@ -8,6 +8,10 @@ import seaborn as sns
 
 def init_wandb(config):
     """Initialize Weights & Biases logging."""
+    if not config.get('enable_wandb', True):
+        print("WandB logging is disabled.")
+        return None
+    
     wandb.init(
         project=config['wandb_project'],
         name=config['wandb_run_name'],
@@ -118,6 +122,9 @@ def save_checkpoint(model, optimizer, scheduler, epoch, config, metrics, filenam
 
 def log_metrics_to_wandb(metrics_dict, step=None):
     """Log metrics to WandB."""
+    if not hasattr(wandb, 'run') or wandb.run is None:
+        return  # WandB is not initialized, skip logging
+    
     if step is not None:
         wandb.log(metrics_dict, step=step)
     else:

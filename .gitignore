@@ -1,5 +1,4 @@
 */wandb/
-landmarks/
 data_splits/
 test/
 val/
@@ -10,3 +9,4 @@ h5_output/
 dataset/
 __pycache__/
 .venv/
+**/*.gz

@@ -28,6 +28,16 @@ wandb_project: "isl-stgcn"
 wandb_run_name: "baseline"
 wandb_entity: "yashrb" # Set to your WandB username/team if needed
 
+# Data Augmentation Configuration
+enable_augmentation: false  # Master toggle for all augmentations
+augmentation:
+  probability: 0.3           # Base probability for each augmentation type
+  rotation_range: 15.0       # ±degrees rotation
+  scale_range: [0.8, 1.2]   # Min/max scaling factors
+  translation_range: 0.1     # Translation as fraction of coordinate range
+  noise_std: 0.02           # Gaussian noise standard deviation
+  occlusion_prob: 0.1       # Probability of landmark occlusion
+
 # Paths
 checkpoint_dir: "./checkpoints"
 save_model: false

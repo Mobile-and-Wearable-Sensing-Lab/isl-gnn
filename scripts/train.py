@@ -153,6 +153,11 @@ def main(config_path):
 
     # Create data loaders
     print("Creating data loaders...")
+    
+    # Get augmentation settings from config
+    enable_augmentation = config.get('enable_augmentation', False)
+    aug_config = config.get('augmentation', {})
+    
     dataloaders = create_data_loaders(
         root_dir=config['data_root'],
         batch_size=config['batch_size'],
@@ -161,7 +166,14 @@ def main(config_path):
         use_hand_landmarks=config['use_hand_landmarks'],
         normalize=config['normalize'],
         max_frames=config['max_frames'],
-        shuffle_train=True
+        shuffle_train=True,
+        augment=enable_augmentation,
+        augment_prob=aug_config.get('probability', 0.3),
+        rotation_range=aug_config.get('rotation_range', 15.0),
+        scale_range=tuple(aug_config.get('scale_range', [0.8, 1.2])),
+        translation_range=aug_config.get('translation_range', 0.1),
+        noise_std=aug_config.get('noise_std', 0.02),
+        occlusion_prob=aug_config.get('occlusion_prob', 0.1)
     )
 
     # Get number of classes from dataset - use global class count for consistency

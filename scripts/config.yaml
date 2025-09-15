@@ -1,5 +1,5 @@
 # Data Configuration
-data_root: "/Users/yashrb/Projects/isl_videos/landmarks"  # Update this path
+data_root: "/Users/yashrb/Projects/isl-gnn/landmarks"  # Update this path
 batch_size: 32
 num_workers: 0
 max_frames: 100  # Set to None to use all frames

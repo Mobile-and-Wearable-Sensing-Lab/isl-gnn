@@ -115,17 +115,37 @@ class ISLVideoDataset(Dataset):
                 self.class_to_parent[class_name] = parent_category
                 all_classes.append(class_name)
 
-        # Create class to index mapping (across all parent categories)
-        for idx, class_name in enumerate(sorted(all_classes)):
+        # Load global class mapping to ensure consistency
+        # This ensures all splits use the same class-to-index mapping
+        global_classes_file = os.path.join(os.path.dirname(self.root_dir), 'global_classes.txt')
+        if os.path.exists(global_classes_file):
+            with open(global_classes_file, 'r') as f:
+                global_classes = [line.strip() for line in f.readlines()]
+            print(f"Using global class mapping from {global_classes_file} with {len(global_classes)} classes")
+        else:
+            global_classes = sorted(set(all_classes))
+            # Save for future use
+            with open(global_classes_file, 'w') as f:
+                for class_name in global_classes:
+                    f.write(f"{class_name}\n")
+            print(f"Created global class mapping at {global_classes_file} with {len(global_classes)} classes")
+
+        # Create class to index mapping using global classes
+        for idx, class_name in enumerate(global_classes):
             self.class_to_idx[class_name] = idx
             self.idx_to_class[idx] = class_name
 
-        # Build file list with parent category hierarchy
+        # Build file list with parent category hierarchy - ONLY include classes present in this split
         for parent_category in parent_categories:
             parent_dir = os.path.join(self.split_dir, parent_category)
             class_names = self.parent_to_classes[parent_category]
 
             for class_name in class_names:
+                #Skip classes not in global mapping
+                if class_name not in self.class_to_idx:
+                    print(f"Warning: Class '{class_name}' in {self.split} split not found in global classes. Skipping.")
+                    continue
+                    
                 class_dir = os.path.join(parent_dir, class_name)
                 h5_files = [f for f in os.listdir(class_dir) if f.endswith('.h5')]
 

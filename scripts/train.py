@@ -164,10 +164,18 @@ def main(config_path):
         shuffle_train=True
     )
 
-    # Get number of classes from dataset
+    # Get number of classes from dataset - use global class count for consistency
     train_dataset = dataloaders['train'].dataset
-    num_classes = train_dataset.get_num_classes()
+    num_classes = len(train_dataset.class_to_idx)  # Use global class mapping count
     class_names = train_dataset.get_class_names()
+    
+    # Report actual vs available classes in each split
+    train_actual_classes = len(set(train_dataset.labels))
+    val_actual_classes = len(set(dataloaders.get('val', dataloaders.get('test')).dataset.labels)) if 'val' in dataloaders or 'test' in dataloaders else 0
+    
+    print(f"Global classes defined: {num_classes}")
+    print(f"Train split has samples from: {train_actual_classes} classes")
+    print(f"Validation split has samples from: {val_actual_classes} classes")
 
     print(f"Number of classes: {num_classes}")
     print(f"Training samples: {len(train_dataset)}")

@@ -219,6 +219,9 @@ class HandSTGCN(nn.Module):
                 st_gcn(in_channels, 32, kernel_size, 1, dropout=dropout, residual=True),
                 st_gcn(32, 64, kernel_size, 2, dropout=dropout, residual=True),
                 st_gcn(64, 64, kernel_size, 2, dropout=dropout, residual=True),
+                st_gcn(64, 64, kernel_size, 2, dropout=dropout, residual=True),
+                st_gcn(64, 64, kernel_size, 2, dropout=dropout, residual=True),
+                st_gcn(64, 64, kernel_size, 2, dropout=dropout, residual=True),
             )
         )
 

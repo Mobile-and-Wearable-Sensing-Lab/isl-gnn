@@ -1,20 +1,20 @@
 # Data Configuration
 data_root: "/Users/yashrb/Projects/isl-gnn/landmarks"  # Update this path
 batch_size: 32
-num_workers: 0
-max_frames: 100  # Set to None to use all frames
-normalize: true
+num_workers: 19
+max_frames: 120  # Set to None to use all frames
+normalize: false
 use_world_landmarks: false
 use_hand_landmarks: true
 
 # Model Configuration
-dropout: 0.2
+dropout: 0.4
 edge_importance_weighting: true
 
 # Training Configuration
 epochs: 100
 learning_rate: 0.001
-weight_decay: 0.0001
+weight_decay: 0.005
 cosine_t_max: 100  # For cosine annealing
 cosine_eta_min: 0.00001
 
@@ -29,7 +29,7 @@ wandb_run_name: "baseline"
 wandb_entity: "yashrb" # Set to your WandB username/team if needed
 
 # Data Augmentation Configuration
-enable_augmentation: false  # Master toggle for all augmentations
+enable_augmentation: false # Master toggle for all augmentations
 augmentation:
   probability: 0.3           # Base probability for each augmentation type
   rotation_range: 15.0       # ±degrees rotation

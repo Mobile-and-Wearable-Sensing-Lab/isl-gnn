@@ -203,6 +203,7 @@ def main(config_path):
         edge_importance_weighting=config['edge_importance_weighting'],
         dropout=config['dropout']
     )
+    print(model)
     model = model.to(device)
 
     # Count parameters

@@ -53,46 +53,38 @@ class ConvTemporalGraphical(nn.Module):
 
 
 class HandGraph:
-    def __init__(self, strategy="spatial"):
-        self.num_nodes = 21
+    def __init__(self, strategy="spatial", connect_hands=True):
+        self.num_nodes = 42  # 21 landmarks per hand * 2 hands
         self.strategy = strategy
+        self.connect_hands = connect_hands
         self.A = self._get_adjacency()
 
     def _get_adjacency(self):
         if self.strategy == "spatial":
-            # MediaPipe hand landmark connections
-            edges = [
-                (0, 1),
-                (1, 2),
-                (2, 3),
-                (3, 4),  # thumb
-                (0, 5),
-                (5, 6),
-                (6, 7),
-                (7, 8),  # index finger
-                (0, 9),
-                (9, 10),
-                (10, 11),
-                (11, 12),  # middle finger
-                (0, 13),
-                (13, 14),
-                (14, 15),
-                (15, 16),  # ring finger
-                (0, 17),
-                (17, 18),
-                (18, 19),
-                (19, 20),  # pinky
-                (5, 9),
-                (9, 13),
-                (13, 17),  # palm connections
+            # MediaPipe hand landmark connections for one hand
+            single_hand_edges = [
+                (0, 1), (1, 2), (2, 3), (3, 4),  # thumb
+                (0, 5), (5, 6), (6, 7), (7, 8),  # index finger
+                (0, 9), (9, 10), (10, 11), (11, 12),  # middle finger
+                (0, 13), (13, 14), (14, 15), (15, 16),  # ring finger
+                (0, 17), (17, 18), (18, 19), (19, 20),  # pinky
+                (5, 9), (9, 13), (13, 17),  # palm connections
             ]
-            # Initialize adjacency matrix
+
+            # Initialize adjacency matrix for 42 nodes (2 hands)
             A = np.zeros((1, self.num_nodes, self.num_nodes))
 
-            # Fill in adjacency matrix
-            for i, j in edges:
+            # Add edges for first hand (nodes 0-20) and second hand (nodes 21-41)
+            for i, j in single_hand_edges:
                 A[0, i, j] = 1
-                A[0, j, i] = 1  # Undirected graph
+                A[0, j, i] = 1
+                A[0, i + 21, j + 21] = 1
+                A[0, j + 21, i + 21] = 1
+
+            # Optionally connect the two hands (wrist to wrist)
+            if self.connect_hands:
+                A[0, 0, 21] = 1  # Connect left wrist to right wrist
+                A[0, 21, 0] = 1  # Connect right wrist to left wrist
 
             # Add self-loops
             A[0] = A[0] + np.eye(self.num_nodes)
@@ -141,7 +133,7 @@ class st_gcn(nn.Module):
 
         self.tcn = nn.Sequential(
             nn.BatchNorm2d(out_channels),
-            nn.ReLU(inplace=True),
+            nn.ReLU(inplace=False),
             nn.Conv2d(
                 out_channels,
                 out_channels,
@@ -150,7 +142,7 @@ class st_gcn(nn.Module):
                 padding,
             ),
             nn.BatchNorm2d(out_channels),
-            nn.Dropout(dropout, inplace=True),
+            nn.Dropout(dropout, inplace=False),
         )
 
         if not residual:
@@ -165,7 +157,7 @@ class st_gcn(nn.Module):
                 nn.BatchNorm2d(out_channels),
             )
 
-        self.relu = nn.ReLU(inplace=True)
+        self.relu = nn.ReLU(inplace=False)
 
     def forward(self, x, A):
         res = self.residual(x)
@@ -179,7 +171,7 @@ class HandSTGCN(nn.Module):
     """Spatial Temporal Graph Convolutional Networks for MediaPipe hand landmarks.
 
     Args:
-        in_channels (int): Number of channels in the input data (usually 3 for x,y,z coordinates)
+        in_channels (int): Number of channels in the input data (usually 2 or 3 for x,y or x,y,z coordinates)
         num_class (int): Number of classes for the classification task
         edge_importance_weighting (bool): If ``True``, adds a learnable importance weighting
                                          to the edges of the graph
@@ -190,13 +182,13 @@ class HandSTGCN(nn.Module):
             N is batch size
             C is number of channels (coordinates)
             T is length of input sequence (frames)
-            V is number of nodes (hand landmarks)
-            M is number of hands
+            V is number of nodes (21 hand landmarks per hand)
+            M is number of hands (2)
         - Output: (N, num_class)
     """
 
     def __init__(
-        self, in_channels=3, num_class=30, edge_importance_weighting=True, dropout=0.05
+        self, in_channels=2, num_class=262, edge_importance_weighting=True, dropout=0.4
     ):
         super().__init__()
 
@@ -211,7 +203,7 @@ class HandSTGCN(nn.Module):
         kernel_size = (temporal_kernel_size, spatial_kernel_size)
 
         # Data normalization
-        self.data_bn = nn.BatchNorm1d(in_channels * A.size(1))
+        self.data_bn = nn.BatchNorm1d(in_channels * 42)
 
         # Define ST-GCN layers
         self.st_gcn_networks = nn.ModuleList(
@@ -240,21 +232,25 @@ class HandSTGCN(nn.Module):
         """
         x: Input tensor with shape (N, C, T, V, M)
             N: batch size
-            C: number of channels (x,y,z coordinates)
+            C: number of channels (x,y or x,y,z coordinates)
             T: number of frames
             V: number of landmarks (21 for MediaPipe hand)
             M: number of hands (2)
         """
-        # Input is already in the correct shape (N, C, T, V, M)
         N, C, T, V, M = x.size()
-
-        # Reshape for data normalization
-        x = x.permute(0, 4, 3, 1, 2).contiguous()  # (N, C, T, V, M) -> (N, M, V, C, T)
-        x = x.view(N * M, V * C, T)
+        
+        # Combine both hands into a single graph with 42 nodes
+        # Reshape from (N, C, T, 21, 2) to (N, C, T, 42)
+        x = x.permute(0, 1, 2, 4, 3).contiguous()  # (N, C, T, M, V)
+        x = x.view(N, C, T, M * V)  # (N, C, T, 42)
+        
+        # Reshape for batch normalization
+        # We need (N, C*V, T) for BatchNorm1d
+        x = x.permute(0, 1, 3, 2).contiguous()  # (N, C, 42, T)
+        x = x.view(N, C * M * V, T)  # (N, 84, T) for C=2 or (N, 126, T) for C=3
         x = self.data_bn(x)
-        x = x.view(N, M, V, C, T)
-        x = x.permute(0, 1, 3, 4, 2).contiguous()  # -> (N, M, C, T, V)
-        x = x.view(N * M, C, T, V)
+        x = x.view(N, C, M * V, T)  # (N, C, 42, T)
+        x = x.permute(0, 1, 3, 2).contiguous()  # (N, C, T, 42)
 
         # Forward through ST-GCN networks
         for gcn, importance in zip(self.st_gcn_networks, self.edge_importance):
@@ -262,7 +258,7 @@ class HandSTGCN(nn.Module):
 
         # Global pooling
         x = F.avg_pool2d(x, x.size()[2:])
-        x = x.view(N, M, -1, 1, 1).mean(dim=1)  # Combine multiple hands
+        x = x.view(N, -1, 1, 1)
 
         # Prediction
         x = self.fcn(x)
@@ -276,16 +272,18 @@ class HandSTGCN(nn.Module):
 
         x: Input tensor with shape (N, C, T, V, M)
         """
-        # Input is already in the correct shape
         N, C, T, V, M = x.size()
-
-        # Reshape for data normalization
-        x = x.permute(0, 4, 3, 1, 2).contiguous()  # (N, C, T, V, M) -> (N, M, V, C, T)
-        x = x.view(N * M, V * C, T)
+        
+        # Combine both hands into a single graph with 42 nodes
+        x = x.permute(0, 1, 2, 4, 3).contiguous()  # (N, C, T, M, V)
+        x = x.view(N, C, T, M * V)  # (N, C, T, 42)
+        
+        # Reshape for batch normalization
+        x = x.permute(0, 1, 3, 2).contiguous()  # (N, C, 42, T)
+        x = x.view(N, C * 42, T)
         x = self.data_bn(x)
-        x = x.view(N, M, V, C, T)
-        x = x.permute(0, 1, 3, 4, 2).contiguous()  # -> (N, M, C, T, V)
-        x = x.view(N * M, C, T, V)
+        x = x.view(N, C, 42, T)
+        x = x.permute(0, 1, 3, 2).contiguous()  # (N, C, T, 42)
 
         # Forward through ST-GCN networks
         features = []
@@ -293,13 +291,13 @@ class HandSTGCN(nn.Module):
             x, _ = gcn(x, self.A * importance)
             features.append(x)
 
-        # Reshape features for output
+        # Get final feature
         _, c, t, v = x.size()
-        feature = x.view(N, M, c, t, v).permute(0, 2, 3, 4, 1)
+        feature = x.view(N, c, t, v)
 
         # Prediction
         x = self.fcn(x)
-        output = x.view(N, M, -1, t, v).permute(0, 2, 3, 4, 1)
+        output = x.view(N, -1, t, v)
 
         return output, feature, features
 
@@ -307,14 +305,17 @@ class HandSTGCN(nn.Module):
 # Example usage
 def test_model():
     # Create sample data: [batch_size, coordinates, frames, landmarks, hands]
-    # Example with batch_size=4, 3 coordinates (x,y,z), 30 frames, 21 landmarks, 2 hands
-    sample_data = torch.randn(4, 3, 30, 21, 2)
+    # Example with batch_size=4, 2 coordinates (x,y), 30 frames, 21 landmarks, 2 hands
+    sample_data = torch.randn(4, 2, 30, 21, 2)
 
     # Initialize model
-    model = HandSTGCN(in_channels=3, num_class=30, dropout=0.5)  # 30 gesture classes
+    model = HandSTGCN(in_channels=2, num_class=262, dropout=0.4)
     print(f"Model parameters: {sum(p.numel() for p in model.parameters())}")
-    print(f"Model structure: {model}")
-
+    
+    # Check adjacency matrix size
+    print(f"Adjacency matrix shape: {model.A.shape}")
+    print(f"Edge importance shape: {model.edge_importance[0].shape}")
+    
     # Forward pass
     output = model(sample_data)
 
@@ -325,7 +326,6 @@ def test_model():
     output_features, final_feature, all_features = model.extract_feature(sample_data)
     print(f"Extracted feature shape: {final_feature.shape}")
     print(f"Number of intermediate features: {len(all_features)}")
-    print(f"Shape of output features: {output_features.shape}")
 
 
 if __name__ == "__main__":

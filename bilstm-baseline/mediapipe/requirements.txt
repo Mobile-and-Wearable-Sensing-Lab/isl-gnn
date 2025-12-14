@@ -1,0 +1,6 @@
+numpy
+h5py
+opencv-python
+mediapipe
+flask
+matplotlib

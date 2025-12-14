@@ -1,0 +1,10 @@
+h5py
+torch
+torchvision
+torchaudio
+tqdm
+torch-geometric
+matplotlib
+scikit-learn
+pandas
+# ai_edge_torch

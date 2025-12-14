@@ -1,0 +1,1 @@
+Refer to the `scripts/README.md` for the spatio-temporal GCN code, and `bislstm-baseline` for the docker images, keypoint extraction scripts and other training utilities used in the original baselines
